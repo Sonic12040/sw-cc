@@ -33,3 +33,11 @@ The shipdate_expected field is currently populated with no date (0000-00-00). So
 - **Work quickly.** This project was designed to be completed quickly, so don't spend too much time on it.
 - **Write your own code.** While we understand that there are pakages out there that take care of common problems, we ultimately want to see what _YOU_ can build, not what someone else has built.
 - **Do your best work.** We're using this project as a viewport into who you are as a developer. Show us what you can do!
+
+## Technical Hurdles:
+
+### Hurdle 1: Invalid Date Time Value
+
+Error received: ERROR 1292 (22007) at line 11: Incorrect datetime value: '0000-00-00 00:00:00' for column 'shipdate_expected' at row 1
+
+See ./adrs/2026-08-01-invalid-datetime-value.md
