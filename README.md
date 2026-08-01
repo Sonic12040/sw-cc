@@ -41,3 +41,12 @@ The shipdate_expected field is currently populated with no date (0000-00-00). So
 Error received: ERROR 1292 (22007) at line 11: Incorrect datetime value: '0000-00-00 00:00:00' for column 'shipdate_expected' at row 1
 
 See ./adrs/2026-08-01-invalid-datetime-value.md
+
+## Running the Project
+
+Load the database:
+
+1. Start up your MySQL server.
+2. Load in the database.
+   1. `mysql -u root -p -e "CREATE DATABASE sweetwater CHARACTER SET utf8mb4;"`
+   2. `mysql -u root -p sweetwater < sweetwater_test.sql --init-command="SET sql_mode=''"`
