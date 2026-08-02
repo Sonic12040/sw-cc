@@ -18,9 +18,19 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES => false,
 ];
 
+echo "<h1>Sweetwater Comments</h1>";
 try {
     $pdo = new PDO($data_source_name, $user, $pass, $options);
     echo "Connected to the database successfully.";
+    $stmt = $pdo->query("SELECT * FROM sweetwater_test");
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        echo "success\n";
+    }
+    // Query the database for the rows in the sweetwater table.
+// Following the readme, the table should be known.
+// Generate an <h2> header for each comment, displaying the comment's category.
+// Categories are "comments about candy", comments about call me / don't call me, comments about who referred me, comments about signature requirements on delivery, and miscellaneous comments (comments that don't match other categories).
+
 } catch (PDOException $e) {
     throw new PDOException($e->getMessage(), (int)$e->getCode());
 }
@@ -28,9 +38,5 @@ try {
 
 
 
-echo "<h1>Sweetwater Comments</h1>";
-// Query the database for the rows in the sweetwater table.
-// Following the readme, the table should be known.
-// Generate an <h2> header for each comment, displaying the comment's category.
-// Categories are "comments about candy", comments about call me / don't call me, comments about who referred me, comments about signature requirements on delivery, and miscellaneous comments (comments that don't match other categories).
+
 
