@@ -3,7 +3,6 @@
 // Serve this using PHP's server so that it runs simply by opening the connection in a browser.
 $host = 'localhost';
 $db = 'sweetwater';
-// read these from an 
 $user = getenv('DB_USER') ?: 'root';
 $pass = getenv('DB_PASSWORD') ?: '';
 $charset = 'utf8mb4';
