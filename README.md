@@ -61,3 +61,14 @@ In your terminal (bash commands given):
 Start the PHP server:
 
 1. In the same terminal from the environment variable exports, run `php -S localhost:8000`.
+
+Visit Localhost in your browser
+
+1. Go to http://localhost:8000
+
+## Resources Used:
+
+- Learning MySQL (O'Reilly Press)
+- PHP Official Documentation
+- Google Search (Database connection, research for ADRs, look up methods in Stack Overflow comments)
+- AI (identify any foreign language comments and catch a missing closing brace)
