@@ -1,6 +1,6 @@
 <?php
 
-// Serve this using PHP's server so that it runs simply by opening the connection in a browser.
+// database variables
 $host = 'localhost';
 $db = 'sweetwater';
 $user = getenv('DB_USER') ?: 'root';
