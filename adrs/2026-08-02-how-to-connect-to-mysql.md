@@ -6,7 +6,7 @@ As a novice, I need to know what the optimal way is to connect to MySQL. PHP Dat
 
 ## Decision
 
-PHP Data Objects seems to be the way to go.
+PHP Data Objects seems to be the way to go. Using manual exporting of the environment variables for user and pass, since using the package that seems to be recommended for handling .env files would fall outside the write your own code edict. May write a utility function for convenience later to optimize for UX.
 
 ## Rationale
 

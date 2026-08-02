@@ -51,6 +51,13 @@ Load the database:
    1. `mysql -u root -p -e "CREATE DATABASE sweetwater CHARACTER SET utf8mb4;"`
    2. `mysql -u root -p sweetwater < sweetwater_test.sql --init-command="SET sql_mode=''"`
 
-Start the PHP server.
+Set up Environment Variables:
 
-1. From the root of this repository, run `php -S localhost:8000`.
+In your terminal (bash commands given):
+
+1. export DB_USER="<user_name>"
+2. export DB_PASSWORD="<password>"
+
+Start the PHP server:
+
+1. In the same terminal from the environment variable exports, run `php -S localhost:8000`.

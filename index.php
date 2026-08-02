@@ -1,6 +1,30 @@
 <?php
 
 // Serve this using PHP's server so that it runs simply by opening the connection in a browser.
+$host = 'localhost';
+$db = 'sweetwater';
+// read these from an 
+$user = getenv('DB_USER') ?: 'root';
+$pass = getenv('DB_PASSWORD') ?: '';
+$charset = 'utf8mb4';
+$data_source_name = "mysql:host=$host;dbname=$db;charset=$charset";
+
+// options for the PDO connection
+$options = [
+    // error mode - stricter checking
+    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+    // fetch mode - memory efficiency
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    // emulation off - security
+    PDO::ATTR_EMULATE_PREPARES => false,
+];
+
+try {
+    $pdo = new PDO($data_source_name, $user, $pass, $options);
+    echo "Connected to the database successfully.";
+} catch (PDOException $e) {
+    throw new PDOException($e->getMessage(), (int)$e->getCode());
+}
 
 // Start a connection to the MySQL database, prompting for credentials.
 
