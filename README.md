@@ -50,3 +50,7 @@ Load the database:
 2. Load in the database.
    1. `mysql -u root -p -e "CREATE DATABASE sweetwater CHARACTER SET utf8mb4;"`
    2. `mysql -u root -p sweetwater < sweetwater_test.sql --init-command="SET sql_mode=''"`
+
+Start the PHP server.
+
+1. From the root of this repository, run `php -S localhost:8000`.
