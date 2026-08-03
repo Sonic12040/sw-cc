@@ -15,11 +15,7 @@ $categorizedComments = [
     'Signature Requirements Comments' => [],
     'Miscellaneous Comments' => [],
 ];
-// category regex patterns
-$candy_regex = '/\\b(candy|chocolate|lollipop|taffy|sweet|bit o honey)\\b/i';
-$call_regex = '/\\b(call me|dont call|do not call|text me|phone|mobile|ring)\\b/i';
-$referral_regex = '/\\b(internet search|heard about|referred|googled|referral|recommended by|friend told me|sent me)\\b/i';
-$signature_regex = '/\\b(signature|sign for|adult signature)\\b/i';
+require_once __DIR__ . '/utilities/categorize_comments.php';
 
 // options for the PDO connection
 $options = [
@@ -40,31 +36,11 @@ try {
         // normalization of characters and whitespace
         $safeComment = nl2br(htmlspecialchars(trim($comment), ENT_QUOTES, 'UTF-8'));
         $normalized = strtolower($comment);
-        $matchedAnyCategory = false;
-
-        if (preg_match($candy_regex, $normalized) === 1) {
-            $categorizedComments['Candy Comments'][] = $safeComment;
-            $matchedAnyCategory = true;
-        }
-        // no else because a comment can match multiple categories
-        if (preg_match($call_regex, $normalized) === 1) {
-            $categorizedComments["Call Me / Don't Call Me Comments"][] = $safeComment;
-            $matchedAnyCategory = true;
-        }
-
-        if (preg_match($referral_regex, $normalized) === 1) {
-            $categorizedComments['Referral Comments'][] = $safeComment;
-            $matchedAnyCategory = true;
-        }
-
-        if (preg_match($signature_regex, $normalized) === 1) {
-            $categorizedComments['Signature Requirements Comments'][] = $safeComment;
-            $matchedAnyCategory = true;
-        }
-
-        if (!$matchedAnyCategory) {
-            $categorizedComments['Miscellaneous Comments'][] = $safeComment;
-        }
+        categorizeComments(
+            $normalized,
+            $safeComment,
+            $categorizedComments,
+        );
     }
     
 
