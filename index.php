@@ -16,6 +16,7 @@ $categorizedComments = [
     'Miscellaneous Comments' => [],
 ];
 require_once __DIR__ . '/utilities/categorize_comments.php';
+require_once __DIR__ . '/utilities/render_comments.php';
 
 // options for the PDO connection
 $options = [
@@ -44,18 +45,7 @@ try {
     }
     
 
-    foreach ($categorizedComments as $heading => $comments) {
-        echo '<h2>' . htmlspecialchars($heading, ENT_QUOTES, 'UTF-8') . '</h2>';
-
-        if (empty($comments)) {
-            echo '<p><em>No comments in this category.</em></p>';
-            continue;
-        }
-
-        foreach ($comments as $commentHtml) {
-            echo '<p>' . $commentHtml . '</p>';
-        }
-    }
+    renderComments($categorizedComments);
 
 } catch (PDOException $e) {
     throw new PDOException($e->getMessage(), (int)$e->getCode());
