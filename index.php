@@ -42,6 +42,31 @@ try {
             $safeComment,
             $categorizedComments,
         );
+        // parse if a comment has an expected shipping date
+        $date_pattern = '/\b(?:expected ship date)\s*[:\-]?\s*(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4})\b/i';
+        // if there is a date, parse the date out and update the SQL database with the expected shipping date
+        if (preg_match($date_pattern, $normalized, $matches)) {
+            $expectedShipDate = $matches[1];
+            // added logic because the original date format was submitting everything as showing from 2001 instead of 2018).
+            $dateParts = preg_split('/[\/\-]/', $expectedShipDate);
+
+            if (count($dateParts) === 3) {
+                [$month, $day, $year] = $dateParts;
+
+                if (strlen($year) === 2) {
+                    $year = '20' . $year;
+                }
+
+                $expectedShipDate = sprintf('%04d-%02d-%02d', (int) $year, (int) $month, (int) $day);
+            }
+
+            // update the database with the expected shipping date
+            $updateStmt = $pdo->prepare("UPDATE sweetwater_test SET shipdate_expected = :shipdate_expected WHERE orderid = :orderid");
+            $updateStmt->execute([
+                ':shipdate_expected' => $expectedShipDate,
+                ':orderid' => $row['orderid'],
+            ]);
+        }
     }
     
 

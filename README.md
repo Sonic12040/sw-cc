@@ -66,6 +66,11 @@ Visit Localhost in your browser
 
 1. Go to http://localhost:8000
 
+View the resultant table
+
+1. `mysql -u root -p sweetwater`
+2. `SELECT * FROM sweetwater_test;`
+
 ## Resources Used:
 
 - Learning MySQL (O'Reilly Press)
