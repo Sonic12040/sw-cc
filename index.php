@@ -46,8 +46,20 @@ try {
         updateTableDate($pdo, $row);
     }
     
-
     renderComments($categorizedComments);
+
+    echo "<h2>Database Results</h2>";
+    $stmt = $pdo->query("SELECT * FROM sweetwater_test");
+    echo "<table border='1'>";
+    echo "<tr><th>Order ID</th><th>Comments</th><th>Expected Ship Date</th></tr>";
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        echo "<tr>";
+        echo "<td>" . htmlspecialchars($row['orderid'], ENT_QUOTES, 'UTF-8') . "</td>";
+        echo "<td>" . htmlspecialchars($row['comments'], ENT_QUOTES, 'UTF-8') . "</td>";
+        echo "<td>" . htmlspecialchars($row['shipdate_expected'], ENT_QUOTES, 'UTF-8') . "</td>";
+        echo "</tr>";
+    }
+    echo "</table>";
 
 } catch (PDOException $e) {
     throw new PDOException($e->getMessage(), (int)$e->getCode());

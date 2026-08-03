@@ -71,9 +71,11 @@ View the resultant table
 1. `mysql -u root -p sweetwater`
 2. `SELECT * FROM sweetwater_test;`
 
+OR scroll down to the bottom to see an easy-view table form of the MySQL table.
+
 ## Resources Used:
 
 - Learning MySQL (O'Reilly Press)
 - PHP Official Documentation
 - Google Search (Database connection, research for ADRs, look up methods in Stack Overflow comments)
-- AI (identify any foreign language comments and catch a missing closing brace)
+- AI (identify any foreign language comments and catch a missing closing brace, add date parsing to reformat the date with the year in the correct position)
