@@ -73,6 +73,17 @@ View the resultant table
 
 OR scroll down to the bottom to see an easy-view table form of the MySQL table.
 
+Clean up the database and reload:
+
+1. `mysql -u root -p`
+2. DROP DATABASE sweetwater;
+
+## Common Errors:
+
+- Unknown database sweetwater: Make sure to run the commands to create the database before opening the PHP server in the browser.
+- Base Table not found: The first command to create the database has been run, but the command importing the sweetwater_test.sql from the readme has not yet been executed, so while the database exists, the table and its imported data do not.
+- Environment variables not found: Environment variables, when exported in the shell, are only available to PHP's server if it is executed in the same instance where the env variables were exported.
+
 ## Resources Used:
 
 - Learning MySQL (O'Reilly Press)
