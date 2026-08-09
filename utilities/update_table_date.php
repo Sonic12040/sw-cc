@@ -12,15 +12,34 @@ function updateTableDate(PDO $pdo, array $row): void {
     $expectedShipDate = $matches[1];
     $dateParts = preg_split('/[\/\-]/', $expectedShipDate);
 
-    if (count($dateParts) === 3) {
-        [$month, $day, $year] = $dateParts;
-
-        if (strlen($year) === 2) {
-            $year = '20' . $year;
-        }
-
-        $expectedShipDate = sprintf('%04d-%02d-%02d', (int) $year, (int) $month, (int) $day);
+    if (count($dateParts) !== 3) {
+        return;
     }
+
+    [$month, $day, $year] = $dateParts;
+
+    if (strlen($year) === 2) {
+        $year = '20' . $year;
+    }
+
+    $month = (int) $month;
+    $day = (int) $day;
+    $year = (int) $year;
+
+    if ($month < 1 || $month > 12) {
+        return;
+    }
+
+    if ($day < 1 || $day > 31) {
+        return;
+    }
+
+    $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    if ($day > $daysInMonth) {
+        return;
+    }
+
+    $expectedShipDate = sprintf('%04d-%02d-%02d', $year, $month, $day);
 
     $updateStmt = $pdo->prepare(
         'UPDATE sweetwater_test SET shipdate_expected = :shipdate_expected WHERE orderid = :orderid'
