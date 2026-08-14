@@ -1,5 +1,21 @@
 <?php
 
+function ensureRequiredColumns(PDO $pdo, string $tableName, array $requiredColumns): void {
+    $columnsStmt = $pdo->query("SHOW COLUMNS FROM `{$tableName}`");
+    $existingColumns = $columnsStmt->fetchAll(PDO::FETCH_COLUMN, 0);
+    $missingColumns = array_values(array_diff($requiredColumns, $existingColumns));
+
+    if ($missingColumns !== []) {
+        throw new RuntimeException(
+            sprintf(
+                'Schema validation failed for table "%s": missing required columns: %s',
+                $tableName,
+                implode(', ', $missingColumns)
+            )
+        );
+    }
+}
+
 // database variables
 $host = 'localhost';
 $db = 'sweetwater';
@@ -32,8 +48,12 @@ $options = [
 echo "<h1>Sweetwater Comments</h1>";
 try {
     $pdo = new PDO($data_source_name, $user, $pass, $options);
-    $stmt = $pdo->query("SELECT * FROM sweetwater_test");
-    while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+    ensureRequiredColumns($pdo, 'sweetwater_test', ['orderid', 'comments', 'shipdate_expected']);
+
+    $stmt = $pdo->query(
+        'SELECT orderid, comments, shipdate_expected FROM sweetwater_test'
+    );
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         $comment = (string) ($row['comments'] ?? '');
         // normalization of characters and whitespace
         $safeComment = nl2br(htmlspecialchars(trim($comment), ENT_QUOTES, 'UTF-8'));
@@ -45,11 +65,13 @@ try {
         );
         updateTableDate($pdo, $row);
     }
-    
+
     renderComments($categorizedComments);
 
     echo "<h2>Database Results</h2>";
-    $stmt = $pdo->query("SELECT * FROM sweetwater_test");
+    $stmt = $pdo->query(
+        'SELECT orderid, comments, shipdate_expected FROM sweetwater_test'
+    );
     echo "<table border='1'>";
     echo "<tr><th>Order ID</th><th>Comments</th><th>Expected Ship Date</th></tr>";
     while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -62,7 +84,10 @@ try {
     echo "</table>";
 
 } catch (PDOException $e) {
-    throw new PDOException($e->getMessage(), (int)$e->getCode());
+    throw new PDOException($e->getMessage(), (int) $e->getCode());
+} catch (RuntimeException $e) {
+    echo '<p><strong>Schema validation error:</strong> ' . htmlspecialchars($e->getMessage(), ENT_QUOTES, 'UTF-8') . '</p>';
+    exit(1);
 }
 
 
