@@ -1,5 +1,31 @@
 <?php
 
+function tokenAwarePhraseMatch(string $normalized, string $keyword): bool {
+    $keyword = trim($keyword);
+    if ($keyword === '') {
+        return false;
+    }
+
+    $escapedKeyword = preg_quote($keyword, '/');
+    $pattern = '/(?:^|[^a-z0-9])' . $escapedKeyword . '(?=$|[^a-z0-9])/i';
+
+    return preg_match($pattern, $normalized) === 1;
+}
+
+function keywordIsExcluded(string $normalized, string $keyword, array $keywordExclusions): bool {
+    if (!isset($keywordExclusions[$keyword])) {
+        return false;
+    }
+
+    foreach ($keywordExclusions[$keyword] as $excludedPhrase) {
+        if (tokenAwarePhraseMatch($normalized, $excludedPhrase)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function categorizeComments(
     string $normalized,
     string $safeComment,
@@ -12,15 +38,19 @@ function categorizeComments(
             'lollipop',
             'taffy',
             'sweets',
-            'sweet',
             'smarties',
             'tootsie',
             'bit o honey',
             'cinnamon candy',
             'send more candy',
             'extra bags of candy',
+            'hard candy',
+            'gummy candy',
+            'peppermints',
+            'candy bar',
+            'sweet treat',
+            'sweet tooth',
         ],
-        'Excluded Phrases' => [],
         "Call Me / Don't Call Me Comments" => [
             'call me',
             'call me on this number',
@@ -40,7 +70,7 @@ function categorizeComments(
             'email is sufficient',
             'do not call me',
             'no sales calls',
-            'comunicarse'
+            'comunicarse',
         ],
         'Referral Comments' => [
             'internet search',
@@ -87,32 +117,19 @@ function categorizeComments(
     ];
 
     $keywordExclusions = [
-        'sweet' => ['sweetwater'],
+        'sweet' => ['sweetwater', "that'd be sweet", 'that would be sweet', 'it would be sweet', 'be sweet'],
+        'candy' => ['promo', 'sticker', 'stickers'],
     ];
 
     $matchedAnyCategory = false;
 
     foreach ($keywordsByCategory as $category => $keywords) {
-        if ($category === 'Excluded Phrases') {
-            continue;
-        }
-
         foreach ($keywords as $keyword) {
-            if (isset($keywordExclusions[$keyword])) {
-                $excluded = false;
-                foreach ($keywordExclusions[$keyword] as $excludedPhrase) {
-                    if (stripos($normalized, $excludedPhrase) !== false) {
-                        $excluded = true;
-                        break;
-                    }
-                }
-
-                if ($excluded) {
-                    continue;
-                }
+            if (keywordIsExcluded($normalized, $keyword, $keywordExclusions)) {
+                continue;
             }
 
-            if (stripos($normalized, $keyword) !== false) {
+            if (tokenAwarePhraseMatch($normalized, $keyword)) {
                 $categorizedComments[$category][] = $safeComment;
                 $matchedAnyCategory = true;
                 break;
