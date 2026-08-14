@@ -20,6 +20,7 @@ function categorizeComments(
             'send more candy',
             'extra bags of candy',
         ],
+        'Excluded Phrases' => [],
         "Call Me / Don't Call Me Comments" => [
             'call me',
             'call me on this number',
@@ -85,10 +86,32 @@ function categorizeComments(
         ],
     ];
 
+    $keywordExclusions = [
+        'sweet' => ['sweetwater'],
+    ];
+
     $matchedAnyCategory = false;
 
     foreach ($keywordsByCategory as $category => $keywords) {
+        if ($category === 'Excluded Phrases') {
+            continue;
+        }
+
         foreach ($keywords as $keyword) {
+            if (isset($keywordExclusions[$keyword])) {
+                $excluded = false;
+                foreach ($keywordExclusions[$keyword] as $excludedPhrase) {
+                    if (stripos($normalized, $excludedPhrase) !== false) {
+                        $excluded = true;
+                        break;
+                    }
+                }
+
+                if ($excluded) {
+                    continue;
+                }
+            }
+
             if (stripos($normalized, $keyword) !== false) {
                 $categorizedComments[$category][] = $safeComment;
                 $matchedAnyCategory = true;
